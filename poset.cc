@@ -144,6 +144,10 @@ namespace jnp1 {
         }
         return elem1->second.second.find(&(elem2->first)) != elem1->second.second.end();
     }
+
+    void poset_clear(unsigned long id) {
+        posets[id].clear();
+    }
 }
 
 using namespace std;
