@@ -71,12 +71,12 @@ namespace jnp1 {
             return false;
         }
         Poset& poset = posets[id];
-        string name = value;
-        if (poset.find(name) == posets[id].end()) {
+        string val = value;
+        if (poset.find(val) == posets[id].end()) {
             return false;
         }
-        const string *name_ref = &(poset.find(name)->first);
-        auto relations = poset[name];
+        const string *name_ref = &(poset.find(val)->first);
+        auto relations = poset[val];
         auto it = relations.first.begin();
         while (it != relations.first.end()) {
             poset[*(*it)].second.erase(name_ref);
@@ -87,11 +87,63 @@ namespace jnp1 {
             poset[*(*it2)].first.erase(name_ref);
             it2++;
         }
-        poset.erase(name);
+        poset.erase(val);
         return true;
     }
+    /*
+    bool poset_add(unsigned long id, char const *value1, char const *value2) {
+        auto found_poset = posets.find(id);
+        if (found_poset == posets.end()) {
+            return false;
+        }
+        Poset& poset = found_poset->second;
+        string val1 = value1;
+        string val2 = value2;
+        auto elem1 = poset.find(val1);
+        auto elem2 = poset.find(val2);
+        if (elem1 == poset.end() || elem2 == poset.end()) {
+            return false;
+        }
 
-    bool poset_add(unsigned)
+        Relations& elem1in = elem1->second.first;
+        Relations& elem1out = elem1->second.second;
+        Relations& elem2in = elem2->second.first;
+        Relations& elem2out = elem2->second.second;
+
+        if (elem1in.find(&(elem2->first)) != elem1in.end()
+            || elem1out.find(&(elem2->first)) != elem1out.end()) {
+            return false;
+        }
+        auto it1 = elem1in.begin();
+        while (it1 != elem1in.end()) {
+            poset[*(*it1)].second.insert(&(elem2->first));
+            it1++;
+        }
+        auto it2 = elem2.out.begin();
+        while (it2 != elem1in.end()) {
+            poset[*(*it1)].second.insert(&(elem2->first));
+            it1++;
+        }
+
+
+    }
+    */
+
+    bool poset_test(unsigned long id, char const *value1, char const *value2) {
+        auto found_poset = posets.find(id);
+        if (found_poset == posets.end()) {
+            return false;
+        }
+        Poset& poset = found_poset->second;
+        string val1 = value1;
+        string val2 = value2;
+        auto elem1 = poset.find(val1);
+        auto elem2 = poset.find(val2);
+        if (elem1 == poset.end() || elem2 == poset.end()) {
+            return false;
+        }
+        return elem1->second.second.find(&(elem2->first)) != elem1->second.second.end();
+    }
 }
 
 using namespace std;
@@ -110,9 +162,19 @@ int main() {
     cout << "id = " << id << endl;
     cout << (jnp1::poset_size(id))<<endl;
     cout << jnp1::poset_insert(id, "abc") << endl;
-    cout << jnp1::poset_insert(id, "siema") << endl;
     cout<<jnp1::poset_insert(0, "aabc") << endl;
-    cout << (jnp1::poset_size(id)) << endl;
+    cout << "Size of poset id1 = " << (jnp1::poset_size(id)) << endl;
+    unsigned long id_test = jnp1::poset_new();
+    cout << jnp1::poset_insert(id_test, "siema") << endl;
+    cout << jnp1::poset_insert(id_test, "siema") << endl;
+    cout << jnp1::poset_insert(id_test, "siema2") << endl;
+    auto it1 = jnp1::posets[id_test].find("siema");
+    auto it2 = jnp1::posets[id_test].find("siema2");
+    it1->second.second.insert(&(it2->first));
+    it2->second.first.insert(&(it1->first));
+    cout<< "Assert siema r siema2 " <<jnp1::poset_test(id_test, "siema", "siema2") << endl;
+    cout<< "Assert !in id1 siema r siema2 " <<jnp1::poset_test(id, "siema", "siema2") << endl;
+    cout<< "Size id_test = " << jnp1::poset_size(id_test) << endl;
     jnp1::poset_delete(id);
     return 0;
 }
