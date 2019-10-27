@@ -20,8 +20,6 @@ namespace jnp1 {
     unsigned long id_counter = 0;
 
     unordered_map<unsigned long, Poset> posets;
-    //           id              l. elementow,    slownik stringow
-    //unordered_map<unsigned long, pair<pair<size_t, unordered_map<string, size_t>>, Poset>> posets;
 
 
     unsigned long poset_new(void) {
@@ -52,37 +50,27 @@ namespace jnp1 {
 
 
     bool poset_insert(unsigned long id, char const *value) {
-        unordered_map<unsigned long, unordered_map<string, pair<unordered_set<string>, unordered_set<string>>>>::iterator found_poset;
-        found_poset = posets.find(id);
-
+        // unordered_map<unsigned long, unordered_map<string, pair<unordered_set<string>, unordered_set<string>>>>::iterator found_poset;
+        auto found_poset = posets.find(id);
         if (found_poset == posets.end()) {
-
             return false;
         }
         else {
-
-            unordered_map<string, pair<unordered_set<string>, unordered_set<string>>> elements;
-            elements = found_poset->second;
+            //Poset elements;
+            //elements = found_poset->second; // jesli bysmy uzywali tego to stworzylibysmy kopię a nie referencję co
+            // nie aktualizowałoby zmian na naszej mapie. Można to również poprawić robiąc Poset& elements.
             string element(value);
-            if (elements.find(element) == elements.end()) {
-                pair<unordered_set<string>, unordered_set<string>> relations;
-                elements.insert(pair<string, pair<unordered_set<string>, unordered_set<string>>>(element, relations));
-
-                return true;
-            }
-            else {
-
-                return false;
-            }
+            pair<Relations, Relations> inout_relations;
+            auto result = found_poset->second.emplace(element, inout_relations);
+            return result.second;
         }
-
     }
 
     bool poset_remove(unsigned long id, char const *value) {
         if (posets.find(id) == posets.end()) {
             return false;
         }
-        Poset poset = posets[id];
+        Poset& poset = posets[id];
         string name = value;
         if (poset.find(name) == posets[id].end()) {
             return false;
@@ -99,7 +87,11 @@ namespace jnp1 {
             poset[*(*it2)].first.erase(name_ref);
             it2++;
         }
+        poset.erase(name);
+        return true;
     }
+
+    bool poset_add(unsigned)
 }
 
 using namespace std;
@@ -115,8 +107,10 @@ int main() {
 
 
     unsigned long id =  jnp1::poset_new();
+    cout << "id = " << id << endl;
     cout << (jnp1::poset_size(id))<<endl;
     cout << jnp1::poset_insert(id, "abc") << endl;
+    cout << jnp1::poset_insert(id, "siema") << endl;
     cout<<jnp1::poset_insert(0, "aabc") << endl;
     cout << (jnp1::poset_size(id)) << endl;
     jnp1::poset_delete(id);
