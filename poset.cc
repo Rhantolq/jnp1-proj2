@@ -2,7 +2,7 @@
 // Created by rhantolq on 26.10.2019.
 //
 
-#include "poset.h"
+//#include "poset.h"
 #include <iostream>
 #include <unordered_map>
 #include <unordered_set>
@@ -51,6 +51,10 @@ namespace jnp1 {
 
     bool poset_insert(unsigned long id, char const *value) {
         // unordered_map<unsigned long, unordered_map<string, pair<unordered_set<string>, unordered_set<string>>>>::iterator found_poset;
+        if (value == NULL) {
+            return false;
+        }
+
         auto found_poset = posets.find(id);
         if (found_poset == posets.end()) {
             return false;
@@ -67,6 +71,10 @@ namespace jnp1 {
     }
 
     bool poset_remove(unsigned long id, char const *value) {
+        if (value == NULL) {
+            return false;
+        }
+
         if (posets.find(id) == posets.end()) {
             return false;
         }
@@ -131,7 +139,7 @@ namespace jnp1 {
 
     bool poset_del(unsigned long id, char const *value1, char const *value2) {
         auto found_poset = posets.find(id);
-        if (found_poset == posets.end()) {
+        if (found_poset == posets.end() || value1 == NULL || value2 == NULL) {
             return false;
         }
         Poset& poset = found_poset->second;
@@ -166,7 +174,7 @@ namespace jnp1 {
 
     bool poset_test(unsigned long id, char const *value1, char const *value2) {
         auto found_poset = posets.find(id);
-        if (found_poset == posets.end()) {
+        if (found_poset == posets.end() || value1 == NULL || value2 == NULL) {
             return false;
         }
         Poset& poset = found_poset->second;
@@ -177,7 +185,7 @@ namespace jnp1 {
         if (elem1 == poset.end() || elem2 == poset.end()) {
             return false;
         }
-        return elem1->second.second.find(&(elem2->first)) != elem1->second.second.end();
+        return elem1->second.second.find(&(elem2->first)) != elem1->second.second.end() || elem1 == elem2;
     }
 
     void poset_clear(unsigned long id) {
@@ -225,7 +233,7 @@ namespace jnp1 {
 		Poset::iterator found_rel1;
 		Poset::iterator found_rel2;
 
-		if (found_poset == posets.end()) {
+		if (found_poset == posets.end() || value1 == NULL || value2 == NULL) {
 			
 			return false;
 		}
@@ -235,7 +243,8 @@ namespace jnp1 {
 		if (found_rel1 == (found_poset->second).end() || found_rel2 == (found_poset->second).end()){
 			return false;
 		}
-		else if (found_rel1->second.second.find(&(found_rel2->first)) != found_rel1->second.second.end()) {
+		else if (found_rel1->second.second.find(&(found_rel2->first)) != found_rel1->second.second.end() ||
+                    found_rel2->second.second.find(&(found_rel1->first)) != found_rel2->second.second.end()) {
 			return false;
 		}
 		else {
@@ -247,9 +256,9 @@ namespace jnp1 {
 
 
 }
-
+#include <cassert>
 using namespace std;
-
+using namespace jnp1;
 int main() {
 
     unordered_set<string> relations;
@@ -259,7 +268,7 @@ int main() {
 //	string str2 = &(mapa.find("asd")->first);
 //	cout<<str2<<endl;
 
-
+/*
     unsigned long id =  jnp1::poset_new();
     cout << "id = " << id << endl;
     cout << (jnp1::poset_size(id))<<endl;
@@ -280,6 +289,64 @@ int main() {
     cout<< "Size id_test = " << jnp1::poset_size(id_test) << endl;
     cout<< "Assert !in id1 siema r siema2 " <<jnp1::poset_test(id, "siema", "siema2") << endl;
     jnp1::poset_delete(id);
-    jnp1::poset_delete(id_test);
+    jnp1::poset_delete(id_test);*/
+  unsigned long p1;
+
+  p1 = poset_new();
+  assert(poset_size(p1) == 0);
+  assert(poset_size(p1 + 1) == 0);
+  assert(!poset_insert(p1, NULL));
+  assert(poset_insert(p1, "A"));
+  assert(poset_test(p1, "A", "A"));
+  assert(!poset_insert(p1, "A"));
+  assert(!poset_insert(p1 + 1, "B"));
+  assert(poset_size(p1) == 1);
+  assert(!poset_remove(p1 + 1, "A"));
+  assert(poset_remove(p1, "A"));
+  assert(!poset_remove(p1, "A"));
+  assert(poset_insert(p1, "B"));
+  assert(poset_insert(p1, "C"));
+  assert(poset_add(p1, "B", "C"));
+  assert(!poset_remove(p1, "A"));
+  assert(!poset_add(p1, NULL, "X"));
+  assert(!poset_del(p1, NULL, "X"));
+  assert(!poset_test(p1, NULL, "X"));
+  assert(!poset_add(p1, "X", NULL));
+  assert(!poset_del(p1, "X", NULL));
+  assert(!poset_test(p1, "X", NULL));
+  assert(!poset_add(p1, NULL, NULL));
+  assert(!poset_del(p1, NULL, NULL));
+  assert(!poset_test(p1, NULL, NULL));
+  assert(!poset_add(p1, "C", "D"));
+  assert(!poset_add(p1, "D", "C"));
+  assert(!poset_del(p1, "C", "D"));
+  assert(!poset_del(p1, "D", "C"));
+  assert(!poset_test(p1, "C", "D"));
+  assert(!poset_test(p1, "D", "C"));
+  assert(!poset_add(p1 + 1, "C", "D"));
+  assert(!poset_del(p1 + 1, "C", "D"));
+  assert(!poset_test(p1 + 1, "C", "D"));
+  poset_clear(p1);
+  poset_clear(p1 + 1);
+  assert(poset_insert(p1, "E"));
+  assert(poset_insert(p1, "F"));
+  assert(poset_insert(p1, "G"));
+  assert(poset_add(p1, "E", "F"));
+  assert(!poset_add(p1, "E", "F"));
+  assert(!poset_add(p1, "F", "E"));
+  assert(poset_test(p1, "E", "F"));
+  assert(!poset_test(p1, "F", "E"));
+  assert(poset_add(p1, "F", "G"));
+  assert(poset_test(p1, "E", "G"));
+  assert(!poset_del(p1, "E", "G"));
+  assert(poset_del(p1, "E", "F"));
+  assert(!poset_del(p1, "E", "F"));
+  assert(!poset_del(p1, "G", "F"));
+  assert(!poset_del(p1, "G", "G"));
+  assert(poset_size(p1) == 3);
+  poset_delete(p1);
+  poset_delete(p1);
+  poset_delete(p1 + 1);
+    
     return 0;
 }
