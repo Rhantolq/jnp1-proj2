@@ -183,6 +183,69 @@ namespace jnp1 {
     void poset_clear(unsigned long id) {
         posets[id].clear();
     }
+
+
+    void poset_add_out(Relations *additional_out_set, const string *additional_element,
+						const string current_element, Poset *poset) {
+		
+		auto *el = &((*poset).find(current_element)->second);
+		if ((el)->second.find(additional_element) == (el)->second.end()) {
+			for (auto iterator = (*additional_out_set).begin(); iterator != (*additional_out_set).end(); iterator++) {
+				(el)->second.emplace(*iterator);
+			}
+			(el)->second.emplace(additional_element);
+
+			for (auto iterator = (el)->first.begin(); iterator != el->first.end(); iterator++) {
+				poset_add_out(additional_out_set, additional_element, **iterator, poset);
+			}
+		}
+
+	}
+
+	void poset_add_in(Relations *additional_in_set, const string *additional_element,
+						const string current_element, Poset *poset) {
+		
+		auto *el = &((*poset).find(current_element)->second);
+		if (el->first.find(additional_element) == el->first.end()) {
+			for (auto iterator = (*additional_in_set).begin(); iterator != (*additional_in_set).end(); iterator++) {
+				el->first.emplace(*iterator);
+			}
+			el->first.emplace(additional_element);
+
+			for (auto iterator = el->second.begin(); iterator != el->second.end(); iterator++) {
+				poset_add_in(additional_in_set, additional_element, **iterator, poset);
+			}
+		}
+	}
+
+
+	bool poset_add(unsigned long id, char const *value1, char const *value2) {
+		unordered_map<unsigned long, Poset>::iterator found_poset;
+		found_poset = posets.find(id);
+		Poset::iterator found_rel1;
+		Poset::iterator found_rel2;
+
+		if (found_poset == posets.end()) {
+			
+			return false;
+		}
+
+		found_rel1 = (found_poset->second).find(value1);
+		found_rel2 = (found_poset->second).find(value2);
+		if (found_rel1 == (found_poset->second).end() || found_rel2 == (found_poset->second).end()){
+			return false;
+		}
+		else if (found_rel1->second.second.find(&(found_rel2->first)) != found_rel1->second.second.end()) {
+			return false;
+		}
+		else {
+			poset_add_out(&(found_rel2->second.second), &(found_rel2->first), found_rel1->first, &(found_poset->second));
+			poset_add_in(&(found_rel1->second.first), &(found_rel1->first), found_rel2->first, &(found_poset->second));
+			return true;
+		}
+	}
+
+
 }
 
 using namespace std;
