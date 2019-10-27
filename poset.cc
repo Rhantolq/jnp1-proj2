@@ -129,6 +129,41 @@ namespace jnp1 {
     }
     */
 
+    bool poset_del(unsigned long id, char const *value1, char const *value2) {
+        auto found_poset = posets.find(id);
+        if (found_poset == posets.end()) {
+            return false;
+        }
+        Poset& poset = found_poset->second;
+        string val1 = value1;
+        string val2 = value2;
+        auto elem1 = poset.find(val1);
+        auto elem2 = poset.find(val2);
+        if (elem1 == poset.end() || elem2 == poset.end()) {
+            return false;
+        }
+
+        //Relations& elem1in = elem1->second.first;
+        Relations& elem1out = elem1->second.second;
+        Relations& elem2in = elem2->second.first;
+        //Relations& elem2out = elem2->second.second;
+
+        if (elem1out.find(&(elem2->first)) == elem1out.end()) {
+            return false;
+        }
+
+        auto it = elem1out.begin();
+        while (it != elem1out.end()) {
+            if (elem2in.find(*it) != elem2in.end()) {
+                return false;
+            }
+            it++;
+        }
+        elem1out.erase(&(elem2->first));
+        elem2in.erase(&(elem1->first));
+        return true;
+    }
+
     bool poset_test(unsigned long id, char const *value1, char const *value2) {
         auto found_poset = posets.find(id);
         if (found_poset == posets.end()) {
@@ -176,9 +211,12 @@ int main() {
     auto it2 = jnp1::posets[id_test].find("siema2");
     it1->second.second.insert(&(it2->first));
     it2->second.first.insert(&(it1->first));
-    cout<< "Assert siema r siema2 " <<jnp1::poset_test(id_test, "siema", "siema2") << endl;
-    cout<< "Assert !in id1 siema r siema2 " <<jnp1::poset_test(id, "siema", "siema2") << endl;
+    cout<< "Assert siema r siema2 = " <<jnp1::poset_test(id_test, "siema", "siema2") << endl;
+    cout << "Assert del siema r siema2 = " << jnp1::poset_del(id_test, "siema", "siema2") << endl;
+    cout << "Assert ! siema r siema2 = " << jnp1::poset_test(id_test, "siema", "siema2") << endl;
     cout<< "Size id_test = " << jnp1::poset_size(id_test) << endl;
+    cout<< "Assert !in id1 siema r siema2 " <<jnp1::poset_test(id, "siema", "siema2") << endl;
     jnp1::poset_delete(id);
+    jnp1::poset_delete(id_test);
     return 0;
 }
