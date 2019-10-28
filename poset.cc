@@ -7,10 +7,11 @@
 #include <unordered_map>
 #include <unordered_set>
 
-namespace jnp1 {
+using namespace std;
 
-    using namespace std;
-    using Relations = unordered_set<const string*>;
+namespace {
+
+     using Relations = unordered_set<const string*>;
     // Poset class.
     // Every string in this map represents a Poset element and every element has
     // it's incoming relations stored as first element of the pair and outgoing
@@ -21,6 +22,42 @@ namespace jnp1 {
 
     unordered_map<unsigned long, Poset> posets;
 
+    void poset_add_out(Relations *additional_out_set, const string *additional_element,
+						const string current_element, Poset *poset) {
+		
+		auto *el = &(poset->find(current_element)->second);
+		if (el->second.find(additional_element) == el->second.end()) {
+			for (auto iterator = additional_out_set->begin(); iterator != additional_out_set->end(); ++iterator) {
+				el->second.emplace(*iterator);
+			}
+			el->second.emplace(additional_element);
+
+			for (auto iterator = el->first.begin(); iterator != el->first.end(); ++iterator) {
+				poset_add_out(additional_out_set, additional_element, **iterator, poset);
+			}
+		}
+
+	}
+
+	void poset_add_in(Relations *additional_in_set, const string *additional_element,
+						const string current_element, Poset *poset) {
+		
+		auto *el = &(poset->find(current_element)->second);
+		if (el->first.find(additional_element) == el->first.end()) {
+			for (auto iterator = additional_in_set->begin(); iterator != additional_in_set->end(); ++iterator) {
+				el->first.emplace(*iterator);
+			}
+			el->first.emplace(additional_element);
+
+			for (auto iterator = el->second.begin(); iterator != el->second.end(); ++iterator) {
+				poset_add_in(additional_in_set, additional_element, **iterator, poset);
+			}
+		}
+	}
+
+}
+
+namespace jnp1 {
 
     unsigned long poset_new(void) {
         id_counter++;
@@ -43,14 +80,14 @@ namespace jnp1 {
 
 
     void poset_delete(unsigned long id) {
-        if (posets.find(id) != posets.end()) {
-            posets.erase(id);
+        auto found = posets.find(id);
+        if (found != posets.end()) {
+            posets.erase(found);
         }
     }
 
 
     bool poset_insert(unsigned long id, char const *value) {
-        // unordered_map<unsigned long, unordered_map<string, pair<unordered_set<string>, unordered_set<string>>>>::iterator found_poset;
         if (value == NULL) {
             return false;
         }
@@ -60,15 +97,13 @@ namespace jnp1 {
             return false;
         }
         else {
-            //Poset elements;
-            //elements = found_poset->second; // jesli bysmy uzywali tego to stworzylibysmy kopię a nie referencję co
-            // nie aktualizowałoby zmian na naszej mapie. Można to również poprawić robiąc Poset& elements.
             string element(value);
             pair<Relations, Relations> inout_relations;
             auto result = found_poset->second.emplace(element, inout_relations);
             return result.second;
         }
     }
+
 
     bool poset_remove(unsigned long id, char const *value) {
         if (value == NULL) {
@@ -88,54 +123,17 @@ namespace jnp1 {
         auto it = relations.first.begin();
         while (it != relations.first.end()) {
             poset[*(*it)].second.erase(name_ref);
-            it++;
+            ++it;
         }
         auto it2 = relations.second.begin();
         while (it2 != relations.second.end()) {
             poset[*(*it2)].first.erase(name_ref);
-            it2++;
+            ++it2;
         }
         poset.erase(val);
         return true;
     }
-    /*
-    bool poset_add(unsigned long id, char const *value1, char const *value2) {
-        auto found_poset = posets.find(id);
-        if (found_poset == posets.end()) {
-            return false;
-        }
-        Poset& poset = found_poset->second;
-        string val1 = value1;
-        string val2 = value2;
-        auto elem1 = poset.find(val1);
-        auto elem2 = poset.find(val2);
-        if (elem1 == poset.end() || elem2 == poset.end()) {
-            return false;
-        }
 
-        Relations& elem1in = elem1->second.first;
-        Relations& elem1out = elem1->second.second;
-        Relations& elem2in = elem2->second.first;
-        Relations& elem2out = elem2->second.second;
-
-        if (elem1in.find(&(elem2->first)) != elem1in.end()
-            || elem1out.find(&(elem2->first)) != elem1out.end()) {
-            return false;
-        }
-        auto it1 = elem1in.begin();
-        while (it1 != elem1in.end()) {
-            poset[*(*it1)].second.insert(&(elem2->first));
-            it1++;
-        }
-        auto it2 = elem2.out.begin();
-        while (it2 != elem1in.end()) {
-            poset[*(*it1)].second.insert(&(elem2->first));
-            it1++;
-        }
-
-
-    }
-    */
 
     bool poset_del(unsigned long id, char const *value1, char const *value2) {
         auto found_poset = posets.find(id);
@@ -151,10 +149,8 @@ namespace jnp1 {
             return false;
         }
 
-        //Relations& elem1in = elem1->second.first;
         Relations& elem1out = elem1->second.second;
         Relations& elem2in = elem2->second.first;
-        //Relations& elem2out = elem2->second.second;
 
         if (elem1out.find(&(elem2->first)) == elem1out.end()) {
             return false;
@@ -165,7 +161,7 @@ namespace jnp1 {
             if (elem2in.find(*it) != elem2in.end()) {
                 return false;
             }
-            it++;
+            ++it;
         }
         elem1out.erase(&(elem2->first));
         elem2in.erase(&(elem1->first));
@@ -191,40 +187,6 @@ namespace jnp1 {
     void poset_clear(unsigned long id) {
         posets[id].clear();
     }
-
-
-    void poset_add_out(Relations *additional_out_set, const string *additional_element,
-						const string current_element, Poset *poset) {
-		
-		auto *el = &((*poset).find(current_element)->second);
-		if ((el)->second.find(additional_element) == (el)->second.end()) {
-			for (auto iterator = (*additional_out_set).begin(); iterator != (*additional_out_set).end(); iterator++) {
-				(el)->second.emplace(*iterator);
-			}
-			(el)->second.emplace(additional_element);
-
-			for (auto iterator = (el)->first.begin(); iterator != el->first.end(); iterator++) {
-				poset_add_out(additional_out_set, additional_element, **iterator, poset);
-			}
-		}
-
-	}
-
-	void poset_add_in(Relations *additional_in_set, const string *additional_element,
-						const string current_element, Poset *poset) {
-		
-		auto *el = &((*poset).find(current_element)->second);
-		if (el->first.find(additional_element) == el->first.end()) {
-			for (auto iterator = (*additional_in_set).begin(); iterator != (*additional_in_set).end(); iterator++) {
-				el->first.emplace(*iterator);
-			}
-			el->first.emplace(additional_element);
-
-			for (auto iterator = el->second.begin(); iterator != el->second.end(); iterator++) {
-				poset_add_in(additional_in_set, additional_element, **iterator, poset);
-			}
-		}
-	}
 
 
 	bool poset_add(unsigned long id, char const *value1, char const *value2) {
