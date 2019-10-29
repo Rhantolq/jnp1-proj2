@@ -55,67 +55,337 @@ namespace {
 		}
 	}
 
+    /**
+     * Log info
+     */
+
+   /* void poset_new_info() {
+        cerr << "poset_new()" << endl;
+        cerr << "poset_new: poset " << id_counter << " created" << endl;
+    }
+
+    
+    
+    void poset_size_info(unsigned long id) {
+        cerr << "poset_size(" << id << ")" << endl;
+    }
+
+    void poset_size_exist(unsigned long id, size_t p_size) {
+        cerr << "poset_size: poset " << id << "contains " << p_size << "element(s)" << endl;
+    }
+
+    void poset_size_not_exist(unsigned long id) {
+        cerr << "poset_size: poset " << id << " does not exist" << endl;
+    }
+
+    
+    
+    void poset_insert_info(unsigned long id, char const *value) {
+        cerr << "poset_insert(" << id << ", ";
+        if (value == NULL) {
+            cerr << "\"NULL\")" << endl;
+        }
+        else {
+            cerr << "\"" << value << "\")" << endl;
+        }
+    }
+
+    void poset_insert_invalid_id(unsigned long id) {
+        cerr << "poset_insert: poset " << id << " does not exist" << endl;
+    }
+
+    void poset_insert_invalid_value() {
+        cerr << "poset_insert: poset " << "invalid value (NULL)" << endl;
+    }
+
+    void poset_insert_successful(unsigned long id, char const *value) {
+        cerr << "poset_insert: poset " << id << ", element \"" << value << "\" inserted" << endl;
+    }
+
+    void poset_insert_unsuccessful(unsigned long id, char const *value) {
+        cerr << "poset_insert: poset " << id << ", element \"" << value << "\" already exists" << endl;
+    }
+
+
+    void poset_delete_info(unsigned long id) {
+        cerr << "poset_delete(" << id << ")" << endl;
+    }
+
+    void poset_delete_successful(unsigned long id) {
+        cerr << "poset_delete: poset " << id << " deleted" << endl;
+    }
+    
+    void poset_delete_unsuccessful(unsigned long id) {
+        cerr << "poset_delete: poset " << id << " does not exist" << endl;
+    }
+
+
+    void poset_remove_info(unsigned long id, char const *value) {
+        cerr << "poset_remove(" << id << ", \"";
+        if (value == NULL) {
+            cerr << "NULL\")" << endl;
+        }
+        else {
+            cerr << value << "\")" << endl;
+        }
+    }
+
+    void poset_remove_*/
+    
+    void poset_new_info() {
+        cerr << "poset_new()" << endl;
+    }
+
+    void poset_delete_info(unsigned long id) {
+        cerr << "poset_delete(" << id << ")" << endl;
+    }
+
+    void poset_size_info(unsigned long id) {
+        cerr << "poset_size(" << id << ")" << endl;
+    }
+
+    void poset_insert_info(unsigned long id, char const *value) {
+        string ret_value;
+        if (value == NULL) {
+            ret_value = "NULL";
+        }
+        else {
+            ret_value = value;
+        }
+        cerr << "poset_insert(" << id << ", \"" << ret_value << "\")" << endl;
+    }
+
+
+    void poset_remove_info(unsigned long id, const char *value) {
+        string ret_value;
+        if (value == NULL) {
+            ret_value = "NULL";
+        }
+        else {
+            ret_value = value;
+        }
+        cerr << "poset_remove(" << id << ", \"" << ret_value << "\")" << endl;
+    }
+
+    void poset_clear_info(unsigned long id) {
+        cerr << "poset_clear(" << id << ")" << endl;
+    }
+
+    void poset_add_info(unsigned long id, const char *value1, const char *value2) {
+        string ret_value1, ret_value2;
+        if (value1 == NULL) {
+            ret_value1 = "NULL";
+        }
+        else {
+            ret_value1 = value1;
+        }
+
+        if (value2 == NULL) {
+            ret_value2 = "NULL";
+        }
+        else {
+            ret_value2 = value2;
+        }
+
+        cerr << "poset_add(" << id << ", \"" << ret_value1 << "\", \"" << ret_value2 << "\")" << endl;
+    }
+
+    void poset_del_info(unsigned long id, const char *value1, const char *value2) {
+        string ret_value1, ret_value2;
+        if (value1 == NULL) {
+            ret_value1 = "NULL";
+        }
+        else {
+            ret_value1 = value1;
+        }
+
+        if (value2 == NULL) {
+            ret_value2 = "NULL";
+        }
+        else {
+            ret_value2 = value2;
+        }
+        cerr << "poset_del(" << id << ", \"" << ret_value1 << "\", \"" << ret_value2 << "\")" << endl;
+    }
+
+    void poset_test_info(unsigned long id, const char *value1, const char *value2) {
+        string ret_value1, ret_value2;
+        if (value1 == NULL) {
+            ret_value1 = "NULL";
+        }
+        else {
+            ret_value1 = value1;
+        }
+
+        if (value2 == NULL) {
+            ret_value2 = "NULL";
+        }
+        else {
+            ret_value2 = value2;
+        }
+
+        cerr << "poset_test(" << id << ", \"" << ret_value1 << "\", \"" << ret_value2 <<"\")" << endl;
+    }
+
+    void poset_does_not_exist(unsigned long id, string function_name) {
+        cerr << function_name << ": poset " << id << " does not exist" << endl;
+    }
+
+    void poset_deleted(unsigned long id, string function_name) {
+        cerr << function_name << ": poset " << id << " deleted" << endl;
+    }
+
+    void poset_created(unsigned long id, string function_name) {
+        cerr << function_name << ": poset " << id << " created" << endl;
+    }
+
+    void poset_contains(unsigned long id, size_t number, string function_name) {
+        cerr << function_name << ": poset " << id << " contains " << number << " element(s)" << endl;
+    }
+
+    void poset_invalid_value(int value_no, string function_name) {
+        cerr << function_name << ": invalid value";
+        if (value_no != 0) {
+            cerr << value_no;
+        }
+        cerr << " (NULL)" << endl;
+    }
+
+    void element_inserted(unsigned long id, const char *value, string function_name) {
+        cerr << function_name << ": poset " << id << ", element \"" << value << "\" inserted" << endl;
+    }
+    
+    void element_already_exists(unsigned long id, const char *value, string function_name) {
+        cerr << function_name << ": poset " << id << ", element \"" << value << "\" already exists" << endl;
+    }
+
+    void element_removed(unsigned long id, const char *value, string function_name) {
+        cerr << function_name << ": poset " << id << ", element \"" << value << "\" removed" << endl;
+    }
+
+    void element_does_not_exist(unsigned long id, const char *value, string function_name) {
+        cerr << function_name << ": poset " << id << ", element \"" << value << "\" does not exist" << endl;
+    }
+
+    void elements_does_not_exist(unsigned long id, const char *value1, const char *value2, string function_name) {
+        cerr << function_name << ": poset " << id << ", element \"" << value1 << "\" or \"" << value2 << "\" does not exist" << endl;
+    }
+
+    void relation_exists(unsigned long id, const char *value1, const char *value2, string function_name) {
+        cerr << function_name << ": poset " << id << ", relation (\"" << value1 << "\", \"" << value2 << "\") exists" << endl;
+    }
+
+    void relation_does_not_exists(unsigned long id, const char *value1, const char *value2, string function_name) {
+        cerr << function_name << ": poset " << id << ", relation (\"" << value1 << "\", \"" << value2 << "\") does not exist" << endl;
+    }
+
+    void relation_cannot_be_deleted(unsigned long id, const char *value1, const char *value2, string function_name) {
+        cerr << function_name << ": poset " << id << ", relation (\"" << value1 << "\", \"" << value2 << "\") cannot be deleted" << endl;
+    }
+    void relation_deleted(unsigned long id, const char *value1, const char *value2, string function_name) {
+        cerr << function_name << ": poset " << id << ", relation (\"" << value1 << "\", \"" << value2 << "\") deleted" << endl;
+    }
+
+    void relation_added(unsigned long id, const char *value1, const char *value2, string function_name) {
+        cerr << function_name << ": poset " << id << ", relation (\"" << value1 << "\", \"" << value2 << "\") added" << endl;
+    }
+
+    void relation_cannot_be_added(unsigned long id, const char *value1, const char *value2, string function_name) {
+        cerr << function_name << ": poset " << id << ", relation (\"" << value1 << "\", \"" << value2 << "\") cannot be added" << endl;
+    }
+
+    void poset_cleared(unsigned long id, string function_name) {
+        cerr << function_name << ": poset " << id << " cleared" << endl;
+    }
 }
 
 namespace jnp1 {
 
     unsigned long poset_new(void) {
+        poset_new_info();
+        unsigned long poset_no = id_counter;
         id_counter++;
         Poset poset;
-        posets[id_counter] = poset;
-        return id_counter;
+        posets[poset_no] = poset;
+        poset_created(poset_no, __func__);
+        return poset_no;
     }
 
 
     size_t poset_size(unsigned long id) {
+        poset_size_info(id);
+
         auto found_poset = posets.find(id);
         if (found_poset == posets.end()) {
+            poset_does_not_exist(id, __func__);
             return 0;
         }
         else {
             Poset elements = found_poset->second;
-            return elements.size();
+            size_t ret = elements.size();
+            poset_contains(id, ret, __func__);
+            return ret;
         }
     }
 
 
     void poset_delete(unsigned long id) {
+        poset_delete_info(id);
+
         auto found = posets.find(id);
         if (found != posets.end()) {
             posets.erase(found);
+            poset_deleted(id, __func__);
+        }
+        else {
+            poset_does_not_exist(id, __func__);
         }
     }
 
 
     bool poset_insert(unsigned long id, char const *value) {
-        if (value == NULL) {
-            return false;
-        }
+        poset_insert_info(id, value);
 
         auto found_poset = posets.find(id);
         if (found_poset == posets.end()) {
+            poset_does_not_exist(id, __func__);
+            return false;
+        }
+        else if (value == NULL) {
+            poset_invalid_value(0, __func__);
             return false;
         }
         else {
             string element(value);
             pair<Relations, Relations> inout_relations;
             auto result = found_poset->second.emplace(element, inout_relations);
+            if (result.second) {
+                element_inserted(id, value, __func__);
+            }
+            else {
+                element_already_exists(id, value, __func__);
+            }
             return result.second;
         }
     }
 
 
     bool poset_remove(unsigned long id, char const *value) {
-        if (value == NULL) {
+        poset_remove_info(id, value);
+
+        if (posets.find(id) == posets.end()) {
+            poset_does_not_exist(id, __func__);
+            return false;
+        }
+        else if (value == NULL) {
+            poset_invalid_value(0, __func__);
             return false;
         }
 
-        if (posets.find(id) == posets.end()) {
-            return false;
-        }
         Poset& poset = posets[id];
         string val = value;
         if (poset.find(val) == posets[id].end()) {
+            element_does_not_exist(id, value, __func__);
             return false;
         }
         const string *name_ref = &(poset.find(val)->first);
@@ -131,21 +401,40 @@ namespace jnp1 {
             ++it2;
         }
         poset.erase(val);
+
+        element_removed(id, value, __func__);
         return true;
     }
 
 
     bool poset_del(unsigned long id, char const *value1, char const *value2) {
+        poset_del_info(id, value1, value2);
+
         auto found_poset = posets.find(id);
-        if (found_poset == posets.end() || value1 == NULL || value2 == NULL) {
+        bool status = true;
+        if (found_poset == posets.end()) {
+            poset_does_not_exist(id, __func__);
+            status = false;
+        }
+        if (value1 == NULL)  {
+            poset_invalid_value(1, __func__);
+            status = false;
+        }
+        if (value2 == NULL) {
+            poset_invalid_value(2, __func__);
+            status = false;
+        }
+        if (!status) {
             return false;
         }
+
         Poset& poset = found_poset->second;
         string val1 = value1;
         string val2 = value2;
         auto elem1 = poset.find(val1);
         auto elem2 = poset.find(val2);
         if (elem1 == poset.end() || elem2 == poset.end()) {
+            elements_does_not_exist(id, value1, value2, __func__);
             return false;
         }
 
@@ -153,65 +442,126 @@ namespace jnp1 {
         Relations& elem2in = elem2->second.first;
 
         if (elem1out.find(&(elem2->first)) == elem1out.end()) {
+            relation_cannot_be_deleted(id, value1, value2, __func__);
             return false;
         }
 
         auto it = elem1out.begin();
         while (it != elem1out.end()) {
             if (elem2in.find(*it) != elem2in.end()) {
+                relation_cannot_be_deleted(id, value1, value2, __func__);
                 return false;
             }
             ++it;
         }
         elem1out.erase(&(elem2->first));
         elem2in.erase(&(elem1->first));
+
+        relation_deleted(id, value1, value2, __func__);
+
         return true;
     }
 
     bool poset_test(unsigned long id, char const *value1, char const *value2) {
+        poset_test_info(id, value1, value2);
+
         auto found_poset = posets.find(id);
-        if (found_poset == posets.end() || value1 == NULL || value2 == NULL) {
+        bool status = true;
+        if (found_poset == posets.end()) {
+            poset_does_not_exist(id, __func__);
+            status = false;
+        }
+        if (value1 == NULL) {
+            poset_invalid_value(1, __func__);
+            status = false;
+        }
+        if (value2 == NULL) {
+            poset_invalid_value(2, __func__);
+            status = false;
+        }
+        if (!status) {
             return false;
         }
+
         Poset& poset = found_poset->second;
         string val1 = value1;
         string val2 = value2;
         auto elem1 = poset.find(val1);
         auto elem2 = poset.find(val2);
         if (elem1 == poset.end() || elem2 == poset.end()) {
+            elements_does_not_exist(id, value1, value2, __func__);
             return false;
         }
-        return elem1->second.second.find(&(elem2->first)) != elem1->second.second.end() || elem1 == elem2;
+
+        bool ret = elem1->second.second.find(&(elem2->first)) != elem1->second.second.end() || elem1 == elem2;
+
+        if (ret) {
+            relation_exists(id, value1, value2, __func__);
+        }
+        else {
+            relation_does_not_exists(id, value1, value2, __func__);
+        }
+
+        return ret;
     }
 
     void poset_clear(unsigned long id) {
-        posets[id].clear();
+        poset_clear_info(id);
+        auto found = posets.find(id);
+        if (found == posets.end()) {
+            poset_does_not_exist(id, __func__);
+        }
+        else {
+            posets[id].clear();
+            poset_cleared(id, __func__);
+        }
     }
 
 
 	bool poset_add(unsigned long id, char const *value1, char const *value2) {
+        poset_add_info(id, value1, value2);
+
 		unordered_map<unsigned long, Poset>::iterator found_poset;
 		found_poset = posets.find(id);
 		Poset::iterator found_rel1;
 		Poset::iterator found_rel2;
 
-		if (found_poset == posets.end() || value1 == NULL || value2 == NULL) {
-			
-			return false;
+        bool status = true;
+		if (found_poset == posets.end()) {
+			poset_does_not_exist(id, __func__);
+			status = false;
 		}
+        if (value1 == NULL) {
+            poset_invalid_value(1, __func__);
+            status = false;
+        }
+        if (value2 == NULL) {
+            poset_invalid_value(2, __func__);
+            status = false;
+        }
+
+        if (!status) {
+            return false;
+        }
 
 		found_rel1 = (found_poset->second).find(value1);
 		found_rel2 = (found_poset->second).find(value2);
-		if (found_rel1 == (found_poset->second).end() || found_rel2 == (found_poset->second).end()){
+		if (found_rel1 == (found_poset->second).end() || found_rel2 == (found_poset->second).end()) {
+            elements_does_not_exist(id, value1, value2, __func__);
 			return false;
 		}
 		else if (found_rel1->second.second.find(&(found_rel2->first)) != found_rel1->second.second.end() ||
                     found_rel2->second.second.find(&(found_rel1->first)) != found_rel2->second.second.end()) {
+            
+            relation_cannot_be_added(id, value1, value2, __func__);
 			return false;
 		}
 		else {
 			poset_add_out(&(found_rel2->second.second), &(found_rel2->first), found_rel1->first, &(found_poset->second));
 			poset_add_in(&(found_rel1->second.first), &(found_rel1->first), found_rel2->first, &(found_poset->second));
+
+            relation_added(id, value1, value2, __func__);
+
 			return true;
 		}
 	}
