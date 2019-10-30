@@ -75,79 +75,6 @@ namespace {
      * Log info
      */
 
-    /* void poset_new_info() {
-         cerr << "poset_new()" << endl;
-         cerr << "poset_new: poset " << id_counter << " created" << endl;
-     }
-
-
-
-     void poset_size_info(unsigned long id) {
-         cerr << "poset_size(" << id << ")" << endl;
-     }
-
-     void poset_size_exist(unsigned long id, size_t p_size) {
-         cerr << "poset_size: poset " << id << "contains " << p_size << "element(s)" << endl;
-     }
-
-     void poset_size_not_exist(unsigned long id) {
-         cerr << "poset_size: poset " << id << " does not exist" << endl;
-     }
-
-
-
-     void poset_insert_info(unsigned long id, char const *value) {
-         cerr << "poset_insert(" << id << ", ";
-         if (value == NULL) {
-             cerr << "\"NULL\")" << endl;
-         }
-         else {
-             cerr << "\"" << value << "\")" << endl;
-         }
-     }
-
-     void poset_insert_invalid_id(unsigned long id) {
-         cerr << "poset_insert: poset " << id << " does not exist" << endl;
-     }
-
-     void poset_insert_invalid_value() {
-         cerr << "poset_insert: poset " << "invalid value (NULL)" << endl;
-     }
-
-     void poset_insert_successful(unsigned long id, char const *value) {
-         cerr << "poset_insert: poset " << id << ", element \"" << value << "\" inserted" << endl;
-     }
-
-     void poset_insert_unsuccessful(unsigned long id, char const *value) {
-         cerr << "poset_insert: poset " << id << ", element \"" << value << "\" already exists" << endl;
-     }
-
-
-     void poset_delete_info(unsigned long id) {
-         cerr << "poset_delete(" << id << ")" << endl;
-     }
-
-     void poset_delete_successful(unsigned long id) {
-         cerr << "poset_delete: poset " << id << " deleted" << endl;
-     }
-
-     void poset_delete_unsuccessful(unsigned long id) {
-         cerr << "poset_delete: poset " << id << " does not exist" << endl;
-     }
-
-
-     void poset_remove_info(unsigned long id, char const *value) {
-         cerr << "poset_remove(" << id << ", \"";
-         if (value == NULL) {
-             cerr << "NULL\")" << endl;
-         }
-         else {
-             cerr << value << "\")" << endl;
-         }
-     }
-
-     void poset_remove_*/
-
     void poset_new_info() {
         cerr_init();
         cerr << "poset_new()" << endl;
@@ -593,7 +520,8 @@ namespace jnp1 {
             return false;
         }
         else if (found_rel1->second.second.find(&(found_rel2->first)) != found_rel1->second.second.end() ||
-                 found_rel2->second.second.find(&(found_rel1->first)) != found_rel2->second.second.end()) {
+                 found_rel2->second.second.find(&(found_rel1->first)) != found_rel2->second.second.end() ||
+                 found_rel1 == found_rel2) {
 
             relation_cannot_be_added(id, value1, value2, __func__);
             return false;
@@ -621,7 +549,7 @@ int main() {
     // mapa["asd"]= 1;
     // string str2 = &(mapa.find("asd")->first);
     // cout<<str2<<endl;
-
+*/
 /*
     unsigned long id =  jnp1::poset_new();
     cout << "id = " << id << endl;
