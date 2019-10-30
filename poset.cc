@@ -34,10 +34,6 @@ namespace {
         return *ans;
     }
 
-
-
-    //unordered_map<unsigned long, Poset> posets;
-
     void poset_add_out(Relations *additional_out_set, const string *additional_element,
                        const string current_element, Poset *poset) {
 
