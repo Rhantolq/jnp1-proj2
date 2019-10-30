@@ -33,6 +33,7 @@ namespace {
         }
     }
 
+    // Maps posets to it's IDs.
     unordered_map<unsigned long, Poset>& posets() {
         static unordered_map<unsigned long, Poset>* ans =
                 new unordered_map<unsigned long, Poset>();
